@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{af308fe1-a383-43d7-9c3e-2f0627dba36f}</ProjectGuid>
-    <RootNamespace>Terminal</RootNamespace>
+    <ProjectGuid>{743b5886-61e7-4632-84dd-cfc2c47b3d13}</ProjectGuid>
+    <RootNamespace>Files</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -40,7 +40,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -132,12 +132,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp" />
+    <ClInclude Include="Display.h" />
+    <ClInclude Include="Explorer.h" />
+    <ClInclude Include="Manager.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Files\Files.vcxproj">
-      <Project>{743b5886-61e7-4632-84dd-cfc2c47b3d13}</Project>
-    </ProjectReference>
+    <ClCompile Include="Display.cpp" />
+    <ClCompile Include="Explorer.cpp" />
+    <ClCompile Include="Manager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
