@@ -3,13 +3,17 @@
 #define MANAGER_H
 
 #include "Explorer.h"
+#include "Display.h"
 
 class Manager {
 private:
     Explorer explorer;
+    Display _display;
 
+    void InitialDisplay();
+    void handleInput();
 public:
-    Manager(const std::string& path = ".");
+    explicit Manager(const std::string& path = ".");
     void run();
 };
 
