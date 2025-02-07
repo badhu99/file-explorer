@@ -9,7 +9,7 @@
 #include "Display.h"
 
 Manager::Manager(const std::string& path)
-    : explorer(path), _display() {}
+    : _explorer(path), _display() {}
 
 
 void Manager::run() {
@@ -18,14 +18,17 @@ void Manager::run() {
     try
     {
         while (true) {
-            if (this->explorer.hasIndexChanged()) {
-                _display.moveCursor(explorer.getSelectedIndex(), explorer.getOldIndex());
-                explorer.updateOldIndex();
+            if (_explorer.hasIndexChanged()) {
+                _display.moveCursor(_explorer.getSelectedIndex(), _explorer.getOldIndex());
+                _explorer.updateOldIndex();
             }
 
-            if (this->explorer.hasDirectoryChanged()) {
+            if (_explorer.hasDirectoryChanged()) {
                 InitialDisplay();
-                this->explorer.updateOldDirectoryPath();
+            }
+
+            if (_explorer.hasCommandChanged()) {
+                this->_display.updateCommandsDisplay(_explorer.getCommand());
             }
 
             this->handleInput();
@@ -39,9 +42,13 @@ void Manager::run() {
 
 void Manager::InitialDisplay()
 {
-    this->_display.setItems(explorer.getItems());
-    system("cls");  // Clear screen (Windows)
-    _display.display(explorer.getSelectedIndex(), explorer.getCurrentPath());
+    int index = _explorer.getSelectedIndex();
+    auto path = _explorer.getCurrentPath();
+    auto command = _explorer.getCommand();
+
+    this->_display.setItems(_explorer.getItems());
+    _display.clearFullDisplay();
+    _display.display(index, path, command);
 }
 
 void Manager::handleInput()
@@ -51,6 +58,6 @@ void Manager::handleInput()
         throw std::runtime_error("Termination requested by user.");
     }
     else {
-        this->explorer.handleInput(key);
+        _explorer.handleInput(key);
     }
 }

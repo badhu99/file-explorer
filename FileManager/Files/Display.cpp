@@ -3,21 +3,16 @@
 #include <iomanip>
 #include "ItemDetails.h"
 
-Display::Display(std::vector<ItemDetails> items) : _items(items)
-{
-}
-
-Display::Display() : _items(std::vector<ItemDetails>()) {}
-
-void Display::display(int selectedIndex, const std::string& currentPath) const {
-	this->displayTopPanel(currentPath);
+void Display::display(int selectedIndex, const std::string& currentPath, const std::string& command) const {
+	this->displayTopPanel(currentPath, command);
 	this->displayLeftPanel(selectedIndex);
 	this->displayRightPanel(this->_items[selectedIndex]);
 }
 
-void Display::displayTopPanel(const std::string& path) const {
+void Display::displayTopPanel(const std::string& path, const std::string& command) const {
 	std::cout << "\033[1;1H"; // Move cursor to the top-left corner
 	std::cout << std::left << path << std::endl;
+	displayCommand(command);
 	std::cout << std::string(80, '-') << std::endl; // Separator line
 }
 
@@ -68,14 +63,6 @@ void Display::clearRightPanel() const {
 	}
 }
 
-void Display::displayLeftItem(const ItemDetails& item) const {
-	std::string displayName = item.name;
-	if (item.isDirectory) {
-		displayName += "/";
-	}
-	std::cout << std::left << std::setw(this->panelWidth - 2) << displayName;
-}
-
 void Display::moveCursor(int index, int oldIndex) const {
 	if (oldIndex >= 0 && oldIndex < static_cast<int>(_items.size())) {
 		std::cout << "\033[" << oldIndex + 3 << ";1H  "; // Adjusted to start below the top panel
@@ -93,6 +80,24 @@ void Display::moveCursor(int index, int oldIndex) const {
 	}
 }
 
+void Display::updateCommandsDisplay(const std::string& command) const {
+	std::cout << "\033[2;1H"; // Move cursor to the commands line
+	std::cout << std::string(80, ' '); // Clear the commands line
+	std::cout << "\033[2;1H"; // Move cursor back to the commands line
+	this->displayCommand(command);
+}
+
+void Display::displayLeftItem(const ItemDetails& item) const {
+	std::string displayName = item.name;
+	if (item.isDirectory) {
+		displayName += "/";
+	}
+	std::cout << std::left << std::setw(this->panelWidth - 2) << displayName;
+}
+
+void Display::displayCommand(const std::string& command) const {
+	std::cout << std::left << "$ " << command << std::endl;
+}
 void Display::setItems(std::vector<ItemDetails> items) {
 	_items = items;
 }

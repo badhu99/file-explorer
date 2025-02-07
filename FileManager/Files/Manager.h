@@ -7,7 +7,7 @@
 
 class Manager {
 private:
-    Explorer explorer;
+    Explorer _explorer;
     Display _display;
 
     void InitialDisplay();

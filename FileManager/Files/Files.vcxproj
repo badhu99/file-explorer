@@ -134,12 +134,14 @@
   <ItemGroup>
     <ClInclude Include="Display.h" />
     <ClInclude Include="Explorer.h" />
+    <ClInclude Include="Helper.h" />
     <ClInclude Include="Manager.h" />
     <ClInclude Include="ItemDetails.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="Explorer.cpp" />
+    <ClCompile Include="Helper.cpp" />
     <ClCompile Include="Manager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

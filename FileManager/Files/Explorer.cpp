@@ -1,23 +1,18 @@
 #include "Explorer.h"
 #include <filesystem>
 #include "ItemDetails.h"
-
-
-void Explorer::updateCurrentPath(const std::string& path){}
-
-std::vector<ItemDetails> Explorer::getCurrentItems() const
-{
-	return std::vector<ItemDetails>();
-}
+#include "Helper.h"
 
 void Explorer::changeDirectory(const std::string& name)
 {
 	this->updateToAbsolutePath();
-
 	_path = std::filesystem::weakly_canonical(_path / name);
 	this->loadItemsFromPath();
+
 	this->_oldIndex = 0;
 	this->_selectedIndex = 0;
+	this->_command.clear();
+	this->_oldCommand.clear();
 }
 
 void Explorer::updateToAbsolutePath()
@@ -27,13 +22,23 @@ void Explorer::updateToAbsolutePath()
 	}
 }
 
-Explorer::Explorer(const std::string& path)
-	: _selectedIndex(0), _oldIndex(0),
-	_path(path), _oldPath(path) {
-	this->updateToAbsolutePath();
-	loadItemsFromPath();
+ItemDetails* Explorer::findItem(const std::string& name)
+{
+	for (auto& item : items) {
+		if (item.name == name) {
+			return &item;
+		}
+	}
+	return nullptr;
 }
 
+ItemDetails* Explorer::findItem(int index)
+{
+	if (index >= 0 && index < static_cast<int>(items.size()))
+		return &items[index];
+
+	return nullptr;
+}
 void Explorer::loadItemsFromPath() {
 	items.clear();
 	for (const auto& entry : std::filesystem::directory_iterator(_path)) {
@@ -42,10 +47,8 @@ void Explorer::loadItemsFromPath() {
 	}
 }
 
-void Explorer::handleInput(char key) {
+void Explorer::handleInput(const char& key) {
 	switch (key) {
-	default:
-		break;
 	case 72:  // Up arrow
 		if (_selectedIndex > 0) {
 			_selectedIndex--;
@@ -60,52 +63,66 @@ void Explorer::handleInput(char key) {
 		this->changeDirectory("..");
 		break;
 	case 77:  // Right arrow
+	{
 		auto item = items[this->getSelectedIndex()];
 		if (item.isDirectory) {
 			this->changeDirectory(item.name);
 		}
 		break;
 	}
+	case 8:  // Backspace
+		if (!_command.empty()) {
+			_command.pop_back();
+		}
+		break;
+	case 9:  // Tab
+		this->HandleTab();
+		break;
+	case 13:
+		this->HandleEnter();
+		break;
+	default:
+		if (std::isalpha(static_cast<unsigned char>(key))) {
+			this->_command.push_back(key);
+		}
+		break;
+	}
 }
 
-int Explorer::getSelectedIndex() const {
-	return _selectedIndex;
+void Explorer::HandleTab() {
+	auto possibleFileNames = std::vector<std::string>();
+	for (const auto& item : items) {
+		if (Helper::startsWithIgnoreCase(item.name, _command)) {
+			possibleFileNames.push_back(item.name);
+		}
+	}
+
+	if (possibleFileNames.empty())
+		return;
+
+	if (possibleFileNames.size() == 1)
+		this->_command = possibleFileNames[0];
+
+	this->_command = Helper::findLongestPrefix(possibleFileNames, _command);
 }
 
-int Explorer::getOldIndex() const
-{
-	return this->_oldIndex;
-}
+void Explorer::HandleEnter() {
+	auto commands = Helper::splitString(_command, ' ');
+	ItemDetails * item = nullptr;
 
-const std::string& Explorer::getSelectedItem() const {
-	return items[_selectedIndex].name;
-}
+	if (commands.size() == 0) {
+		item = this->findItem(this->_selectedIndex);
+	}
 
-const std::vector<ItemDetails>& Explorer::getItems() const {
-	return items;
-}
+	if (commands.size() == 1) {
+		item = this->findItem(_command);
+	}
 
-bool Explorer::hasIndexChanged() const
-{
-	return this->_oldIndex != this->_selectedIndex;
-}
-
-void Explorer::updateOldIndex()
-{
-	this->_oldIndex = this->_selectedIndex;
-}
-
-std::string Explorer::getCurrentPath() const
-{
-	return this->_path.string();
-}
-
-bool Explorer::hasDirectoryChanged() const
-{
-	return this->_oldPath != this->_path;
-}
-
-void Explorer::updateOldDirectoryPath()
-{
-	this->_oldPath = this->_path;
+	if (item != nullptr && item->isDirectory) {
+		this->changeDirectory(item->name);
+	}
+	else {
+		_command.clear();
+		_oldCommand.clear();
+	}
 }
