@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Manager.h"
 
 #include <conio.h>  // for _getch() on Windows
@@ -20,6 +22,7 @@ void Manager::run() {
         while (true) {
             if (_explorer.hasIndexChanged()) {
                 _display.moveCursor(_explorer.getSelectedIndex(), _explorer.getOldIndex());
+                _display.updateRightPanel(_explorer.getSelectedIndex());
                 _explorer.updateOldIndex();
             }
 

@@ -4,9 +4,9 @@
 #include "ItemDetails.h"
 
 void Display::display(int selectedIndex, const std::string& currentPath, const std::string& command) const {
-	this->displayTopPanel(currentPath, command);
-	this->displayLeftPanel(selectedIndex);
-	this->displayRightPanel(this->_items[selectedIndex]);
+	displayTopPanel(currentPath, command);
+	displayLeftPanel(selectedIndex);
+	displayRightPanel(this->_items[selectedIndex]);
 }
 
 void Display::displayTopPanel(const std::string& path, const std::string& command) const {
@@ -18,7 +18,7 @@ void Display::displayTopPanel(const std::string& path, const std::string& comman
 
 void Display::displayLeftPanel(int selectedIndex) const {
 	for (size_t i = 0; i < _items.size(); ++i) {
-		std::cout << "\033[" << i + 3 << ";1H"; // Move cursor to the correct line below the top panel
+		std::cout << "\033[" << i + _topPanelHeight << ";1H"; // Move cursor to the correct line below the top panel
 		if (i == selectedIndex) {
 			std::cout << "* ";
 		}
@@ -31,56 +31,47 @@ void Display::displayLeftPanel(int selectedIndex) const {
 }
 
 void Display::displayRightPanel(const ItemDetails& selectedItem) const {
-	int topOffset = this->_topPanelHeight;
 	int startCol = this->panelWidth + this->_rightPanelOffset; // Starting column for the right panel
 
-	std::cout << "\033[" << (topOffset) << ";" << startCol << "H";
-	std::cout << std::left << "Name: " << selectedItem.name;
-	std::cout << std::endl;
-
-	std::cout << "\033[" << (topOffset + 1) << ";" << startCol << "H";
-	std::cout << std::left << "Size: " << selectedItem.size;
-	std::cout << std::endl;
-
-	std::cout << "\033[" << (topOffset + 2) << ";" << startCol << "H";
-	std::cout << std::left << "Created: " << selectedItem.created;
-	std::cout << std::endl;
-
-	std::cout << "\033[" << (topOffset + 3) << ";" << startCol << "H";
-	std::cout << std::left << "Modified: " << selectedItem.modified;
-	std::cout << std::endl;
-
-
-	std::cout << "\033[" << (topOffset + 4) << ";" << startCol << "H";
-	std::cout << std::left << "Accessed: " << selectedItem.accessed;
-	std::cout << std::endl;
+	for (size_t i = 0; i < selectedItem.data.size(); ++i) {
+		const auto& itemData = selectedItem.data[i];
+		std::cout << "\033[" << _topPanelHeight + i << ";" << startCol << "H";
+		std::cout << itemData << std::endl;
+	}
 }
 
-void Display::clearRightPanel() const {
-	for (size_t i = 0; i < _items.size(); ++i) {
-		std::cout << "\033[" << i + 3 << ";" << this->panelWidth + 5 << "H"; // Adjusted to start clearing below the top panel
-		std::cout << std::string(30, ' '); // Clear the line
+void Display::clearRightPanel(const ItemDetails& item) const {
+	int startCol = this->panelWidth + this->_rightPanelOffset;
+
+	for (auto i = 0; i < item.data.size(); i++) {
+		auto itemData = item.data[i];
+		auto charLength = itemData.displayName.length();
+		std::cout << "\033[" << _topPanelHeight + i << ";" << startCol + charLength << "H"; // Adjusted to start clearing below the top panel
+		std::cout << std::string(30, ' ');
 	}
 }
 
 void Display::moveCursor(int index, int oldIndex) const {
 	if (oldIndex >= 0 && oldIndex < static_cast<int>(_items.size())) {
-		std::cout << "\033[" << oldIndex + 3 << ";1H  "; // Adjusted to start below the top panel
+		std::cout << "\033[" << oldIndex + _topPanelHeight << ";1H  "; // Adjusted to start below the top panel
 		this->displayLeftItem(_items[oldIndex]);
 	}
 
 	if (index >= 0 && index < static_cast<int>(_items.size())) {
-		std::cout << "\033[" << index + 3 << ";1H* "; // Adjusted to start below the top panel
+		std::cout << "\033[" << index + _topPanelHeight << ";1H* "; // Adjusted to start below the top panel
 		this->displayLeftItem(_items[index]);
 	}
+}
 
-	clearRightPanel();
+void Display::updateRightPanel(int index) const {
 	if (index >= 0 && index < static_cast<int>(_items.size())) {
+		clearRightPanel(_items[index]);
 		displayRightPanel(_items[index]);
 	}
 }
 
 void Display::updateCommandsDisplay(const std::string& command) const {
+
 	std::cout << "\033[2;1H"; // Move cursor to the commands line
 	std::cout << std::string(80, ' '); // Clear the commands line
 	std::cout << "\033[2;1H"; // Move cursor back to the commands line

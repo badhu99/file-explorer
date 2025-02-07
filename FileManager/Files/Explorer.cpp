@@ -79,7 +79,7 @@ void Explorer::handleInput(const char& key) {
 		this->HandleTab();
 		break;
 	case 13:
-		this->HandleEnter();
+		HandleEnter();
 		break;
 	default:
 		if (std::isalpha(static_cast<unsigned char>(key))) {
@@ -108,21 +108,20 @@ void Explorer::HandleTab() {
 
 void Explorer::HandleEnter() {
 	auto commands = Helper::splitString(_command, ' ');
-	ItemDetails * item = nullptr;
+	ItemDetails* item = nullptr;
 
 	if (commands.size() == 0) {
-		item = this->findItem(this->_selectedIndex);
+		item = findItem(_selectedIndex);
 	}
 
 	if (commands.size() == 1) {
-		item = this->findItem(_command);
+		item = findItem(_command);
 	}
 
 	if (item != nullptr && item->isDirectory) {
-		this->changeDirectory(item->name);
+		changeDirectory(item->name);
 	}
 	else {
 		_command.clear();
-		_oldCommand.clear();
 	}
 }
