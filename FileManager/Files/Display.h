@@ -5,24 +5,27 @@
 #include <vector>
 #include <string>
 #include "Explorer.h"
+#include "ItemDetails.h"
 
 class Display {
 private:
-    std::vector<Explorer::Item> _items;
+    std::vector<ItemDetails> _items;
     int panelWidth = 40;
+    int _rightPanelOffset = 5;
+    int _topPanelHeight = 3;
 
-    void displayDetailsPane(int index, const Explorer::Item& selectedItem) const;
-    void displayItem(Explorer::Item const item) const;
-    //void displayLeftPanel(const std::vector<Explorer::Item>& items, int selectedIndex, int width) const;
-    //void displayRightPanel(const std::string& selectedItem, int width) const;
-
+    void displayLeftItem(const ItemDetails& item) const;
+    void displayLeftPanel(int selectedIndex) const;
+    void displayRightPanel(const ItemDetails& selectedItem) const;
+    void clearRightPanel() const;
+    void displayTopPanel(const std::string& path) const;
 public:
-    explicit Display(std::vector<Explorer::Item> items);
+    explicit Display(std::vector<ItemDetails> items);
     Display();
 
-    void display(int selectedIndex) const;
+    void display(int selectedIndex, const std::string& currentPath) const;
     void moveCursor(int index, int oldIndex) const;
-    void setItems(std::vector<Explorer::Item> items);
+    void setItems(std::vector<ItemDetails> items);
 };
 
 #endif // DISPLAY_H

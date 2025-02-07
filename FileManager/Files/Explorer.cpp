@@ -1,21 +1,18 @@
 #include "Explorer.h"
 #include <filesystem>
+#include "ItemDetails.h"
 
 
-void Explorer::updateCurrentPath(const std::string& path)
+void Explorer::updateCurrentPath(const std::string& path){}
+
+std::vector<ItemDetails> Explorer::getCurrentItems() const
 {
-}
-
-std::vector<Explorer::Item> Explorer::getCurrentItems() const
-{
-	return std::vector<Item>();
+	return std::vector<ItemDetails>();
 }
 
 void Explorer::changeDirectory(const std::string& name)
 {
-	if (_path.is_relative()) {
-		_path = std::filesystem::absolute(_path);
-	}
+	this->updateToAbsolutePath();
 
 	_path = std::filesystem::weakly_canonical(_path / name);
 	this->loadItemsFromPath();
@@ -23,18 +20,26 @@ void Explorer::changeDirectory(const std::string& name)
 	this->_selectedIndex = 0;
 }
 
+void Explorer::updateToAbsolutePath()
+{
+	if (_path.is_relative()) {
+		_path = std::filesystem::absolute(_path);
+	}
+}
+
 Explorer::Explorer(const std::string& path)
 	: _selectedIndex(0), _oldIndex(0),
 	_path(path), _oldPath(path) {
+	this->updateToAbsolutePath();
 	loadItemsFromPath();
 }
 
 void Explorer::loadItemsFromPath() {
 	items.clear();
 	for (const auto& entry : std::filesystem::directory_iterator(_path)) {
-		items.push_back({ entry.path().filename().string(), entry.is_directory() });
+		auto details = ItemDetails{ entry };
+		items.push_back(details);
 	}
-	//for (const auto& fileItem : )
 }
 
 void Explorer::handleInput(char key) {
@@ -76,7 +81,7 @@ const std::string& Explorer::getSelectedItem() const {
 	return items[_selectedIndex].name;
 }
 
-const std::vector<Explorer::Item>& Explorer::getItems() const {
+const std::vector<ItemDetails>& Explorer::getItems() const {
 	return items;
 }
 
@@ -88,6 +93,11 @@ bool Explorer::hasIndexChanged() const
 void Explorer::updateOldIndex()
 {
 	this->_oldIndex = this->_selectedIndex;
+}
+
+std::string Explorer::getCurrentPath() const
+{
+	return this->_path.string();
 }
 
 bool Explorer::hasDirectoryChanged() const

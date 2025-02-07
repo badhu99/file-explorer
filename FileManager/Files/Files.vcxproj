@@ -135,6 +135,7 @@
     <ClInclude Include="Display.h" />
     <ClInclude Include="Explorer.h" />
     <ClInclude Include="Manager.h" />
+    <ClInclude Include="ItemDetails.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Display.cpp" />

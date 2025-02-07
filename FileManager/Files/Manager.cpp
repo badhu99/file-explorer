@@ -39,11 +39,9 @@ void Manager::run() {
 
 void Manager::InitialDisplay()
 {
-    int selectedIndex = explorer.getSelectedIndex();
-    const auto& items = explorer.getItems();
-    this->_display.setItems(items);
+    this->_display.setItems(explorer.getItems());
     system("cls");  // Clear screen (Windows)
-    _display.display(selectedIndex);
+    _display.display(explorer.getSelectedIndex(), explorer.getCurrentPath());
 }
 
 void Manager::handleInput()
