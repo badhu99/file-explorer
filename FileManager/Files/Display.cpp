@@ -92,3 +92,8 @@ void Display::displayCommand(const std::string& command) const {
 void Display::setItems(std::vector<ItemDetails> items) {
 	_items = items;
 }
+
+void Display::displaySettings()
+{
+	std::cout << std::left << "$ TODO implement settings screen";
+}

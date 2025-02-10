@@ -39,6 +39,18 @@ ItemDetails* Explorer::findItem(int index)
 
 	return nullptr;
 }
+void Explorer::HandleSettingsInput(const char& key)
+{
+	switch (key)
+	{
+	case 13:
+		_changeScreen = true;
+		_screen = DisplayScreens::FileExplorer;
+		break;
+	}
+
+}
+
 void Explorer::loadItemsFromPath() {
 	items.clear();
 	for (const auto& entry : std::filesystem::directory_iterator(_path)) {
@@ -76,10 +88,13 @@ void Explorer::handleInput(const char& key) {
 		}
 		break;
 	case 9:  // Tab
-		this->HandleTab();
+		HandleTab();
 		break;
 	case 13:
 		HandleEnter();
+		break;
+	case 59:  // F1 key
+		OpenSettings();
 		break;
 	default:
 		if (std::isalpha(static_cast<unsigned char>(key))) {
@@ -110,7 +125,7 @@ void Explorer::HandleEnter() {
 	auto commands = Helper::splitString(_command, ' ');
 	ItemDetails* item = nullptr;
 
-	if (commands.size() == 0) {
+	if (commands.empty()) {
 		item = findItem(_selectedIndex);
 	}
 
@@ -124,4 +139,9 @@ void Explorer::HandleEnter() {
 	else {
 		_command.clear();
 	}
+}
+
+void Explorer::OpenSettings()
+{
+	_screen = DisplayScreens::Settings;
 }

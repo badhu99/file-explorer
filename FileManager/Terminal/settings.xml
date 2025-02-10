@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Settings>
+	<Window>
+		<Width>800</Width>
+		<Height>600</Height>
+	</Window>
+	<User>
+		<Username>JohnDoe</Username>
+		<DarkMode>true</DarkMode>
+	</User>
+</Settings>

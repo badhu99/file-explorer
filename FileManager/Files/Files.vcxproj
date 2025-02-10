@@ -133,10 +133,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Display.h" />
+    <ClInclude Include="DisplayScreens.h" />
     <ClInclude Include="Explorer.h" />
     <ClInclude Include="Helper.h" />
     <ClInclude Include="Manager.h" />
     <ClInclude Include="ItemDetails.h" />
+    <ClInclude Include="SettingsModel.h" />
+    <ClInclude Include="SettingsHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Display.cpp" />
@@ -144,8 +147,19 @@
     <ClCompile Include="Helper.cpp" />
     <ClCompile Include="ItemDetails.cpp" />
     <ClCompile Include="Manager.cpp" />
+    <ClCompile Include="SettingsHandler.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\pugixml.1.15.0\build\native\pugixml.targets" Condition="Exists('..\packages\pugixml.1.15.0\build\native\pugixml.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\pugixml.1.15.0\build\native\pugixml.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\pugixml.1.15.0\build\native\pugixml.targets'))" />
+  </Target>
 </Project>

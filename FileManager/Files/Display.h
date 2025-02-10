@@ -31,6 +31,8 @@ public:
 	void updateCommandsDisplay(const std::string& command) const;
 	void setItems(std::vector<ItemDetails> items);
 
+	void displaySettings();
+
 	void clearFullDisplay() {
 		system("cls");  // Clear screen (Windows)
 	}

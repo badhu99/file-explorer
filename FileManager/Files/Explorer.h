@@ -6,6 +6,7 @@
 #include <vector>
 #include <filesystem>
 #include "ItemDetails.h"
+#include "DisplayScreens.h"
 
 class Explorer {
 private:
@@ -16,6 +17,8 @@ private:
 	std::filesystem::path _oldPath;
 	std::string _command;
 	std::string _oldCommand;
+	DisplayScreens _screen;
+	bool _changeScreen;
 
 	std::vector<ItemDetails> getCurrentItems() const {
 		return std::vector<ItemDetails>();
@@ -29,14 +32,19 @@ private:
 
 	void HandleTab();
 	void HandleEnter();
+	void OpenSettings();
 public:
 	explicit Explorer(const std::string& path) :
+		_screen(DisplayScreens::FileExplorer),
+		_changeScreen(false),
 		_selectedIndex(0), _oldIndex(0),
 		_path(path), _oldPath(path),
 		_command(""), _oldCommand(_command) {
-		this->updateToAbsolutePath();
+		updateToAbsolutePath();
 		loadItemsFromPath();
 	}
+
+	void HandleSettingsInput(const char& key);
 
 	void loadItemsFromPath();
 	void handleInput(const char& key);
@@ -83,6 +91,18 @@ public:
 		bool hasCommandChanged = this->_command != this->_oldCommand;
 		this->_oldCommand = this->_command;
 		return hasCommandChanged;
+	}
+
+	DisplayScreens getCurrentScreen() const {
+		return _screen;
+	};
+
+	bool hasScreenChanged() const {
+		return _changeScreen;
+	}
+
+	void resetScreenChange() {
+		_changeScreen = false;
 	}
 };
 
