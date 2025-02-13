@@ -1,18 +1,10 @@
 #pragma once
-#ifndef DISPLAY_H
-#define DISPLAY_H
+#include "FileBrowserData.h"
 
-#include <vector>
-#include <string>
-#include "Explorer.h"
-#include "ItemDetails.h"
-
-class Display {
+class FileBrowserDisplay
+{
 private:
-	std::vector<ItemDetails> _items;
-	int panelWidth = 40;
-	int _rightPanelOffset = 5;
-	int _topPanelHeight = 5;
+	FileBrowserData& _data;
 
 	void displayLeftPanel(int selectedIndex) const;
 	void displayRightPanel(const ItemDetails& selectedItem) const;
@@ -22,20 +14,20 @@ private:
 
 	void displayLeftItem(const ItemDetails& item) const;
 	void displayCommand(const std::string& command) const;
-public:
-	Display() = default;
 
-	void display(int selectedIndex, const std::string& currentPath, const std::string& command) const;
+	void displayScreen() const;
+
 	void moveCursor(int index, int oldIndex) const;
-	void updateRightPanel(int index) const;
+public:
+	explicit FileBrowserDisplay(FileBrowserData& manager) : _data(manager) {};
+
+	void Display();
+	void updateRightPanel(size_t index) const;
 	void updateCommandsDisplay(const std::string& command) const;
 	void setItems(std::vector<ItemDetails> items);
 
-	void displaySettings();
-
-	void clearFullDisplay() {
+	void clearFullDisplay() const {
 		system("cls");  // Clear screen (Windows)
 	}
 };
 
-#endif // DISPLAY_H

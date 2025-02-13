@@ -15,52 +15,37 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Manager.h">
+    <ClInclude Include="FileBrowserData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Explorer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Display.h">
+    <ClInclude Include="FileBrowserDisplay.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ItemDetails.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FileBrowserActionHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Helper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SettingsHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SettingsModel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DisplayScreens.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Manager.cpp">
+    <ClCompile Include="FileBrowserData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Explorer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Display.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Helper.cpp">
+    <ClCompile Include="FileBrowserDisplay.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ItemDetails.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SettingsHandler.cpp">
+    <ClCompile Include="FileBrowserActionHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <ClCompile Include="Helper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

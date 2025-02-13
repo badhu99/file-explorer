@@ -28,7 +28,7 @@ std::string Helper::findLongestPrefix(const std::vector<std::string>& words, con
                 return longestPrefix;
             }
         }
-            longestPrefix += letter;
+        longestPrefix += letter;
     }
 
     return longestPrefix;

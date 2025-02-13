@@ -2,7 +2,6 @@
 #include <string_view>
 #include <string>
 #include <vector>
-
 class Helper
 {
 public:
@@ -12,4 +11,3 @@ public:
 	static std::string findSmallestString(const std::vector<std::string>& words);
 	static std::vector<std::string> splitString(const std::string& str, const char& delimiter);
 };
-
